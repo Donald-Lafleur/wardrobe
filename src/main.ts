@@ -16,6 +16,11 @@ export function main(args = ""): void {
 		return;
 	}
 
+	if (globalOptions.kolday !== undefined) {
+		printHtml(formatHtml(getWardrobeForDay(globalOptions.kolday)));
+		return;
+	}
+
 	const searchCriteria = globalOptions.mods?.map((modSearch) => {
 		return formatModifierSearchCriteria(modSearch);
 	});

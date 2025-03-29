@@ -41,6 +41,16 @@ type wardrobeItemResult = {
 	tier: number;
 };
 
+function formatRoll(roll: number | { min: number; max: number } | undefined): string {
+	if (roll === undefined) {
+		return "N/A";
+	}
+	if (typeof roll === "number") {
+		return roll.toString();
+	}
+	return `${roll?.min}-${roll?.max}`;
+}
+
 export function formatHtml(ward: wardrobeItemResults): string {
 	const htmlTableRows = [];
 	htmlTableRows.push(
@@ -56,9 +66,9 @@ export function formatHtml(ward: wardrobeItemResults): string {
 		const hatmods = ward.hat?.modifiers.map((m) => m);
 		for (let i = 0; i < globalOptions.tier; i++) {
 			htmlTableRows.push(
-				`<tr><td>${i === 0 ? "Hat" : ""}</td><td>${hatmods[i].mod}</td><td>${
+				`<tr><td>${i === 0 ? "Hat" : ""}</td><td>${hatmods[i].mod}</td><td>${formatRoll(
 					hatmods[i].roll
-				}</td></tr>`
+				)}</td></tr>`
 			);
 		}
 	}
@@ -66,9 +76,9 @@ export function formatHtml(ward: wardrobeItemResults): string {
 		const shirtmods = ward.shirt?.modifiers.map((m) => m);
 		for (let i = 0; i < globalOptions.tier; i++) {
 			htmlTableRows.push(
-				`<tr><td>${i === 0 ? "Shirt" : ""}</td><td>${shirtmods[i].mod}</td><td>${
+				`<tr><td>${i === 0 ? "Shirt" : ""}</td><td>${shirtmods[i].mod}</td><td>${formatRoll(
 					shirtmods[i].roll
-				}</td></tr>`
+				)}</td></tr>`
 			);
 		}
 	}

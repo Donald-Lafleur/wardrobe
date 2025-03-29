@@ -178,7 +178,7 @@ export function rollModStrength(
 			return tier;
 		case "Familiar Weight":
 			// due to being inversely related this one can't use the same approach as the rest
-			return tier * 2 + 5 - rng.roll(2);
+			return tier * 2 + 5 - rng.mtRand.roll(0, 2);
 	}
 	if (min !== 0) {
 		return { min: min, max: max };

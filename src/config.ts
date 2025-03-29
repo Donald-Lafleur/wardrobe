@@ -145,6 +145,10 @@ export const globalOptions = Args.create(
 			default: 365,
 			hidden: true, // not implemented yet
 		}),
+		kolday: Args.number({
+			help: "The KoL day to use to generate a single wardrobe, as would be returned by the ash function daycount() on that day.",
+			hidden: true,
+		}),
 		mods: Args.custom<modifierSearchCriteria[]>(
 			{
 				help: "Comma separated list of modifiers to search for along with optional colon separated minimum values all wrapped in quotation marks, e.g. \"fam weight:10, sleaze damage:15, moxie:30, hot res\". Use 'stat', 'resistance', 'elemental damage', or 'elemental spell damage' to match any element or stat, e.g., \"familiar weight 10, stat 30, res\". Run 'wardrobe ranges' to see the possible values for each modifier at each tier.",
