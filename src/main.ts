@@ -1,7 +1,8 @@
 import { daycount, print, printHtml } from "kolmafia";
 import { Args } from "grimoire-kolmafia";
 import { globalOptions } from "./config";
-import { formatHtml, getWardrobeForDay } from "./generate";
+import { getWardrobeForDay } from "./generate";
+import { formatHtml, formatMatchesTableHtml } from "./results";
 import { findWardrobeMatches, formatModifierSearchCriteria } from "./search";
 import { possibleRollsTable } from "./wardrobe";
 import { convertToLocalDate, dateToKoLDaycount } from "./dateconv";
@@ -40,10 +41,14 @@ export function main(args = ""): void {
 			)}</table>`
 		);
 	} else {
-		print(`No search criteria defined, printing the next week of wardrobe results`);
+		print(
+			`No search modifier search criteria provided, printing the next week of wardrobe results\n`
+		);
+		const wardrobes = [];
 		for (let i = daycount() + 1; i < daycount() + 8; i++) {
-			printHtml(formatHtml(getWardrobeForDay(i)));
+			wardrobes.push(getWardrobeForDay(i));
 		}
+		printHtml(formatMatchesTableHtml(wardrobes));
 		return;
 	}
 
@@ -56,10 +61,10 @@ export function main(args = ""): void {
 		print(`No matching wardrobe results found`);
 		return;
 	}
-	results.forEach((result) => {
-		printHtml(formatHtml(result));
-	});
+
+	// results.forEach((result) => {
+	// 	printHtml(formatHtml(result));
+	// });
+	printHtml(formatMatchesTableHtml(results));
 	return;
-	// print(convertToLocalDate(8086));
-	// printHtml(formatHtml(getWardrobeForDay(daycount())));
 }

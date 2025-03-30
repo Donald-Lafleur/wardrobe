@@ -1,5 +1,6 @@
 import RNG from "kol-rng";
 import { wardrobeModifier } from "./wardrobe";
+import { globalOptions } from "./config";
 
 export type modifierRollInputs = {
 	base: number;
@@ -7,14 +8,6 @@ export type modifierRollInputs = {
 	roll: number;
 	rollGrowth: number;
 };
-
-export function rollForTier(rng: RNG, tier: number, inputs: modifierRollInputs): number {
-	return (
-		inputs.base +
-		inputs.growth * (tier - 1) +
-		rng.mtRand.roll(0, inputs.roll + inputs.rollGrowth * (tier - 1))
-	);
-}
 
 const familiarDmgRollInputs = {
 	base: 15,
@@ -107,6 +100,14 @@ const regenMaxRollInputs = {
 	rollGrowth: 0,
 };
 
+export function rollForTier(rng: RNG, tier: number, inputs: modifierRollInputs): number {
+	return (
+		inputs.base +
+		inputs.growth * (tier - 1) +
+		rng.mtRand.roll(0, inputs.roll + inputs.rollGrowth * (tier - 1))
+	);
+}
+
 export function rollModStrength(
 	rng: RNG,
 	mod: wardrobeModifier,
@@ -184,4 +185,84 @@ export function rollModStrength(
 		return { min: min, max: max };
 	}
 	return rollForTier(rng, tier, modifierRollInputs);
+}
+
+export function getModStrengthRange(
+	mod: wardrobeModifier,
+	tier = globalOptions.tier
+): { min: number; max: number } {
+	if (tier > 5 || tier < 1) {
+		throw new Error(`Invalid value for tier ${tier}`);
+	}
+	let modifierRollInputs = { base: 0, growth: 0, roll: 0, rollGrowth: 0 };
+	switch (mod) {
+		case "Muscle":
+		case "Mysticality":
+		case "Moxie":
+		case "Stat":
+			modifierRollInputs = baseStatRollInputs;
+			break;
+		case "Hot Resistance":
+		case "Cold Resistance":
+		case "Stench Resistance":
+		case "Sleaze Resistance":
+		case "Spooky Resistance":
+		case "Resistance":
+			modifierRollInputs = resistanceRollInputs;
+			break;
+		case "Maximum MP":
+		case "Maximum HP":
+			modifierRollInputs = maxResourceRollInputs;
+			break;
+		case "Damage Reduction":
+			modifierRollInputs = dmgReductionRollInputs;
+			break;
+		case "Damage Absorption":
+			modifierRollInputs = dmgAbsorptionRollInputs;
+			break;
+		case "Hot Damage":
+		case "Cold Damage":
+		case "Stench Damage":
+		case "Sleaze Damage":
+		case "Spooky Damage":
+		case "Hot Spell Damage":
+		case "Cold Spell Damage":
+		case "Stench Spell Damage":
+		case "Sleaze Spell Damage":
+		case "Spooky Spell Damage":
+		case "Elemental Damage":
+		case "Elemental Spell Damage":
+			modifierRollInputs = elemDmgRollInputs;
+			break;
+		case "Item Drop":
+			modifierRollInputs = itemDropRollInputs;
+			break;
+		case "Meat Drop":
+			modifierRollInputs = meatDropRollInputs;
+			break;
+		case "Monster Level":
+			modifierRollInputs = monsterLevelRollInputs;
+			break;
+		case "HP Regen":
+		case "MP Regen":
+			// for regen we only limit searches based on the max roll for simplicity.
+			modifierRollInputs = regenMaxRollInputs;
+			break;
+		case "Familiar Damage":
+			modifierRollInputs = familiarDmgRollInputs;
+			break;
+		case "Familiar Experience":
+			// Familiar experience doesn't have any randomness to it.
+			return { min: tier, max: tier };
+		case "Familiar Weight":
+			// return tier * 2 + 5 - mtRand.roll(0, 2);
+			// although inversely related, for the purposes of calculating the range
+			// at a given tier this one can still use the same approach as the rest
+			modifierRollInputs = { base: 5, growth: 2, roll: 2, rollGrowth: 0 };
+			break;
+	}
+	const { base, growth, roll, rollGrowth } = modifierRollInputs;
+	const min = base + growth * (tier - 1);
+	const max = min + roll + rollGrowth * (tier - 1);
+	return { min: min, max: max };
 }

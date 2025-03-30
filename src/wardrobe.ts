@@ -82,13 +82,21 @@ export const wardrobeFamEquipModifiers = [
 ] as const;
 export type wardrobeFamEquipModifier = typeof wardrobeFamEquipModifiers[number];
 
+// export const genericModifiers = [
+// 	"Stat",
+// 	"Resistance",
+// 	"Elemental Damage",
+// 	"Elemental Spell Damage",
+// ] as const;
+// export type genericModifier = typeof genericModifiers[number];
+
 export const genericModifiers = [
 	"Stat",
 	"Resistance",
 	"Elemental Damage",
 	"Elemental Spell Damage",
-] as const;
-export type genericModifier = typeof genericModifiers[number];
+];
+export type genericModifier = "Stat" | "Resistance" | "Elemental Damage" | "Elemental Spell Damage";
 
 export const genericModifierToSpecific = {
 	Stat: statModifiers,
@@ -103,13 +111,20 @@ export type wardrobeModifier =
 	| wardrobeFamEquipModifier
 	| genericModifier;
 
+// export const wardrobeHighTierModifiers = [
+// 	"Familiar Experience",
+// 	"Item Drop",
+// 	"Meat Drop",
+// 	"Monster Level",
+// ] as const;
+// export type wardrobeHighTierModifier = typeof wardrobeHighTierModifiers[number];
+
 export const wardrobeHighTierModifiers = [
 	"Familiar Experience",
 	"Item Drop",
 	"Meat Drop",
 	"Monster Level",
-] as const;
-export type wardrobeHighTierModifier = typeof wardrobeHighTierModifiers[number];
+];
 
 export const collarBaseNames = ["pet tag", "collar", "pet sweater"];
 export const collarAdjectives = [

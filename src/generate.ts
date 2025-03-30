@@ -13,6 +13,7 @@ import {
 	wardrobeHatModifier,
 	wardrobeHatModifiers,
 	wardrobeItem,
+	// wardrobeModifier,
 	wardrobeShirtModifier,
 	wardrobeShirtModifiers,
 } from "./wardrobe";
@@ -40,51 +41,6 @@ export type wardrobeItemResult = {
 	modifiers: rolledModifier[];
 	tier: number;
 };
-
-function formatRoll(roll: number | { min: number; max: number } | undefined): string {
-	if (roll === undefined) {
-		return "N/A";
-	}
-	if (typeof roll === "number") {
-		return roll.toString();
-	}
-	return `${roll?.min}-${roll?.max}`;
-}
-
-export function formatHtml(ward: wardrobeItemResults): string {
-	const htmlTableRows = [];
-	htmlTableRows.push(
-		`<table border="1"><thead><th>Item</th><th>Modifier</th><th>Roll</th></thead>`
-	);
-
-	if (ward.collar !== undefined) {
-		htmlTableRows.push(
-			`<tr><td>Collar</td><td>${ward.collar?.modifiers[0].mod}</td><td>${ward.collar?.modifiers[0].roll}</td></tr>`
-		);
-	}
-	if (ward.hat !== undefined) {
-		const hatmods = ward.hat?.modifiers.map((m) => m);
-		for (let i = 0; i < globalOptions.tier; i++) {
-			htmlTableRows.push(
-				`<tr><td>${i === 0 ? "Hat" : ""}</td><td>${hatmods[i].mod}</td><td>${formatRoll(
-					hatmods[i].roll
-				)}</td></tr>`
-			);
-		}
-	}
-	if (ward.shirt !== undefined) {
-		const shirtmods = ward.shirt?.modifiers.map((m) => m);
-		for (let i = 0; i < globalOptions.tier; i++) {
-			htmlTableRows.push(
-				`<tr><td>${i === 0 ? "Shirt" : ""}</td><td>${shirtmods[i].mod}</td><td>${formatRoll(
-					shirtmods[i].roll
-				)}</td></tr>`
-			);
-		}
-	}
-	htmlTableRows.push(`</table>`);
-	return htmlTableRows.join("");
-}
 
 export function getFuturisticCollar(day: number, tier: number): wardrobeItemResult {
 	const seed = day * 11393 + 2063;

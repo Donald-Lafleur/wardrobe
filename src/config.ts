@@ -1,7 +1,9 @@
 import { Args, ParseError } from "grimoire-kolmafia";
+import { error } from "libram/dist/console";
 import { parse } from "date-fns";
 import { modifierSearchCriteria } from "./search";
 import { genericModifiers, wardrobeHighTierModifiers, wardrobeModifier } from "./wardrobe";
+import { getModStrengthRange } from "./roll";
 
 type modifierAliases = {
 	modifier: wardrobeModifier;
@@ -62,7 +64,7 @@ function genericAliases(mod: wardrobeModifier): string[] {
 	return [
 		mod.replace(" ", ""),
 		toPrefixes(mod),
-		mod.replace("damage", "dmg"),
+		mod.replace("Damage", "dmg"),
 		toPrefixes(mod.replace("damage", "dmg")),
 	].reduce((prev: string[], mod) => (prev.some((m) => m === mod) ? prev : [...prev, mod]), []);
 }
@@ -85,31 +87,47 @@ function parseModifierSearchString(
 		const modMatches = allModifierAliases.filter(
 			({ modifier, aliases }) =>
 				modifier.toLowerCase() === mod ||
-				aliases.some((alias: string) => alias === mod) || // aliases before lowercase-includes to catch "res" as allres option
+				aliases.some((alias: string) => alias.toLowerCase() === mod) || // aliases before lowercase-includes to catch "res" as allres option
 				modifier.toLowerCase().includes(mod) ||
 				toPrefixes(modifier) === toPrefixes(mod)
 		);
 		if (modMatches.length > 1) {
-			parseErrors.push(
-				new ParseError(
-					`Multiple different modifiers matched for ${modstring}:\n${modMatches
-						.map((m) => m.modifier)
-						.join(", ")}`
-				)
-			);
+			const errorMsg = `Multiple different modifiers matched for ${modstring}:\n${modMatches
+				.map((m) => m.modifier)
+				.join(", ")}\n`;
+			error(errorMsg);
+			parseErrors.push(new ParseError(errorMsg));
 			return undefined;
 		}
 		if (modMatches.length === 0) {
-			parseErrors.push(new ParseError(`No modifier matched for search: ${modstring}`));
+			const errorMsg = `No modifier matched for search: ${modstring}\n\n`;
+			error(errorMsg);
+			parseErrors.push(new ParseError(errorMsg));
 			return undefined;
 		}
 		const matchedModifier = modMatches[0].modifier;
-		return {
+		const modifierSearch: modifierSearchCriteria = {
 			modifier: matchedModifier,
-			generic: matchedModifier in genericModifiers,
+			// without explicit type to string it won't match, since the union type of matched modifier
+			// is more broad than that of generic modifiers.
+			generic: genericModifiers.includes(matchedModifier.toString()),
 			min: min,
-			hightier: matchedModifier in wardrobeHighTierModifiers,
+			hightier: wardrobeHighTierModifiers.includes(matchedModifier.toString()),
 		};
+		if (globalOptions.tier === undefined) {
+			const errorMsg = `Tier is not defined, unable to search for modifiers without a specific tier to look in\n\n`;
+			error(errorMsg);
+			parseErrors.push(new ParseError(errorMsg));
+			return undefined;
+		}
+		const range = getModStrengthRange(modifierSearch.modifier, globalOptions.tier);
+		if (range.max < (modifierSearch.min ?? 0)) {
+			const errorMsg = `Required minimum value of ${modifierSearch.min} for modifier ${modifierSearch.modifier} is outside the possible range at tier ${globalOptions.tier} of ${range.min}-${range.max}\n\n`;
+			error(errorMsg);
+			parseErrors.push(new ParseError(errorMsg));
+			return undefined;
+		}
+		return modifierSearch;
 	});
 	const validSearchCriteria: modifierSearchCriteria[] = searchCriteria.filter(
 		(p) => p !== undefined
@@ -125,7 +143,7 @@ export const globalOptions = Args.create(
 			help: "Print the table of possible rolls for each modifier at each tier organized by item it appears on and stop.",
 			default: false,
 		}),
-		max: Args.number({
+		maxresults: Args.number({
 			help: "Maxmimum number of succesful search results to print out",
 			default: 10,
 			setting: "wardrobe_maxResults",
@@ -142,17 +160,6 @@ export const globalOptions = Args.create(
 			(datestring) => parse(datestring.replace(/[^0-9]/g, ""), "yyyyMMdd", new Date()),
 			"yyyy-mm-dd"
 		),
-		kolday: Args.number({
-			help: "The KoL day to use to generate a single wardrobe, as would be returned by the ash function daycount() on that day.",
-			hidden: true,
-		}),
-		mods: Args.custom<modifierSearchCriteria[]>(
-			{
-				help: "Comma separated list of modifiers to search for along with optional colon separated minimum values all wrapped in quotation marks, e.g. \"fam weight:10, sleaze damage:15, moxie:30, hot res\". Use 'stat', 'resistance', 'elemental damage', or 'elemental spell damage' to match any element or stat, e.g., \"familiar weight 10, stat 30, res\". Run 'wardrobe ranges' to see the possible values for each modifier at each tier.",
-			},
-			parseModifierSearchString,
-			"string"
-		),
 		tier: Args.number({
 			help: "The tier of wardrobe items to search within. This corresponds to the level at which you plan to use the wardrobe-o-matic.",
 			options: [
@@ -165,12 +172,32 @@ export const globalOptions = Args.create(
 			setting: "wardrobe_defaultTier",
 			default: 3,
 		}),
+		mods: Args.custom<modifierSearchCriteria[]>(
+			{
+				help: "Comma separated list of modifiers to search for along with optional colon separated minimum values all wrapped in quotation marks, e.g. \"fam weight:10, sleaze damage:15, moxie:30, hot res\". Use 'stat', 'resistance', 'elemental damage', or 'elemental spell damage' to match any element or stat, e.g., \"familiar weight 10, stat 30, res\". Run 'wardrobe ranges' to see the possible values for each modifier at each tier.",
+			},
+			parseModifierSearchString,
+			"string"
+		),
 		minmatched: Args.number({
 			help: "Number of modifiers from the search string to require be present before a result is considered a match. Allows searching for more modifiers than can be present on the items. If not specified, all modifiers are required to be present (unless that would be impossible, in which case once every modifier slot that could match does the result is considered a match)",
+		}),
+		kolday: Args.number({
+			help: "The KoL day to use to generate a single wardrobe, as would be returned by the ash function daycount() on that day.",
+			hidden: true,
 		}),
 		requirefamequip: Args.boolean({
 			help: "Require that any familiar equipment modifier specified be present on all matches regardless of minmatched setting.",
 			default: true,
+		}),
+		showrange: Args.flag({
+			help: "Show the range of possible values next to each roll.",
+			setting: "wardrobe_showRange",
+		}),
+		matchcolor: Args.string({
+			help: "Color to print matches in when outputting results (must be one of the 17 CSS basic color keywords or a color hex codes or it will be replaced with black).",
+			default: "orange",
+			setting: "wardrobe_matchColor",
 		}),
 	}
 );
