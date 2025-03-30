@@ -20,9 +20,7 @@ function formatModifier(modroll: rolledModifier): string {
 		typeof modroll.roll === "number"
 			? `${modroll.roll}`
 			: `${modroll.roll.min}-${modroll.roll.max}`;
-	const range = globalOptions.showrange
-		? ` (${formatRoll(getModStrengthRange(modroll.mod))})`
-		: "";
+	const range = globalOptions.showrange ? ` (${formatRoll(getModStrengthRange(modroll.mod))})` : "";
 	// TODO: option to include range in parens is there's room
 	const modString = `${modroll.mod}: ${roll}${range}`;
 	// return modroll.match ? `<b>${modString}</b>` : modString;

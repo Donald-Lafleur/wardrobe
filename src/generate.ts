@@ -96,14 +96,12 @@ export function getFuturisticShirt(day: number, tier: number): wardrobeItemResul
 		materialQuality = rng.pickOne(shirtMaterialQualities);
 	}
 	unknownRolls.push(rng.roll(maxRoll));
-	const mods: rolledModifier[] = shirtModifiers
-		.slice(0, tier)
-		.map((n: number): rolledModifier => {
-			return {
-				mod: wardrobeShirtModifiers[n],
-				roll: rollModStrength(rng, wardrobeShirtModifiers[n], tier),
-			};
-		});
+	const mods: rolledModifier[] = shirtModifiers.slice(0, tier).map((n: number): rolledModifier => {
+		return {
+			mod: wardrobeShirtModifiers[n],
+			roll: rollModStrength(rng, wardrobeShirtModifiers[n], tier),
+		};
+	});
 	return {
 		item: "shirt",
 		name: `${adjective} ${materialQuality}${shirtMaterials[materialRoll]} shirt`,

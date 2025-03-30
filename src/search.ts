@@ -34,10 +34,7 @@ function wardrobeMatchesSearch(
 		const collarMod = wardResult.collar.modifiers[0];
 		// roll for a fam equip is always a number, but typescript apparently doesn't figure that out.
 		const collarRoll: number = typeof collarMod.roll === "number" ? collarMod.roll : 0;
-		if (
-			collarMod.mod === collarCriterion.modifier &&
-			collarRoll >= (collarCriterion.min ?? 0)
-		) {
+		if (collarMod.mod === collarCriterion.modifier && collarRoll >= (collarCriterion.min ?? 0)) {
 			collarMod.match = true;
 			minneeded -= 1;
 		} else if (globalOptions.requirefamequip) {
@@ -130,9 +127,7 @@ export function findWardrobeMatches(): wardrobeItemResults[] {
 	);
 	for (let i = daycount() + 1; i < endkolday; i++) {
 		const wardrobeResult = getWardrobeForDay(i);
-		if (
-			wardrobeMatchesSearch(collarCriteria[0], nonCollarCriteria, wardrobeResult, minneeded)
-		) {
+		if (wardrobeMatchesSearch(collarCriteria[0], nonCollarCriteria, wardrobeResult, minneeded)) {
 			const len = matches.push(wardrobeResult);
 			if (len === globalOptions.maxresults) {
 				break;
