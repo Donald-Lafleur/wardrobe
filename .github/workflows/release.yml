@@ -25,6 +25,8 @@ jobs:
         run: |
           yarn install
           yarn run build
+          git config user.name "Build Script"
+          git config user.email "<>"
           git fetch --all
           SHA=$(git rev-parse --short HEAD)
           git switch release
