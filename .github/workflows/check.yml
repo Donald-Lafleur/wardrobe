@@ -4,43 +4,42 @@
 name: Check and build wardrobe
 
 on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+    push:
+        branches: [main]
+    pull_request:
+        branches: [main]
 
 env:
-  # Default version of Node.js for jobs
-  node-version: "20"
+    # Default version of Node.js for jobs
+    node-version: "20"
 
 jobs:
-  test-script:
-    runs-on: ubuntu-latest
+    test-script:
+        runs-on: ubuntu-latest
 
-    steps:
-      - uses: actions/checkout@v3
-      - name: Use Node.js ${{ env.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ env.node-version }}
-          cache: yarn
-      - run: yarn install --immutable --immutable-cache
-      - run: yarn run build
-      - run: yarn check
+        steps:
+            - uses: actions/checkout@v3
+            - name: Use Node.js ${{ env.node-version }}
+              uses: actions/setup-node@v3
+              with:
+                  node-version: ${{ env.node-version }}
+                  cache: yarn
+            - run: yarn install --immutable --immutable-cache --check-files
+            - run: yarn run build
 
-  lint-all:
-    runs-on: ubuntu-latest
+    lint-all:
+        runs-on: ubuntu-latest
 
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          ref: "main"
+        steps:
+            - uses: actions/checkout@v3
+              with:
+                  ref: "main"
 
-      - name: Use Node.js ${{ env.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ env.node-version }}
-          cache: yarn
-      - run: yarn install --immutable --immutable-cache
-      - run: yarn run lint
-      - run: yarn run build
+            - name: Use Node.js ${{ env.node-version }}
+              uses: actions/setup-node@v3
+              with:
+                  node-version: ${{ env.node-version }}
+                  cache: yarn
+            - run: yarn install --immutable --immutable-cache
+            - run: yarn run lint
+            - run: yarn run build
