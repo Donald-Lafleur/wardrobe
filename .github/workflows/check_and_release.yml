@@ -44,24 +44,31 @@ jobs:
       - run: yarn run lint
       - run: yarn run build
 
-  deploy:
+  build:
     runs-on: ubuntu-latest
     needs: [test-script, lint-all]
-    if: github.ref == 'refs/heads/main'
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          ref: "main"
+
       - name: Use Node.js ${{ env.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ env.node-version }}
-          cache: yarn
-      - run: yarn install --immutable --immutable-cache
-      - run: yarn build
-      - uses: s0/git-publish-subdir-action@develop
-        env:
-          REPO: self
-          BRANCH: release
-          FOLDER: KoLmafia
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          MESSAGE: ${{ github.event.commits[0].message }}
+
+      - name: Build
+        run: |
+          yarn install
+          yarn run build
+          git config user.name "Build Script"
+          git config user.email "<>"
+          git fetch --all
+          SHA=$(git rev-parse --short HEAD)
+          git switch release
+          rm -rf scripts/
+          mv KoLmafia/* ./
+          git add scripts/
+          git commit -m "Build script for commit $SHA"
+          git push origin release
