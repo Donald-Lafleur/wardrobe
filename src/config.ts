@@ -1,18 +1,7 @@
 import { Args, ParseError } from "grimoire-kolmafia";
-import { wardrobeHighTierModifiers, wardrobeItem, wardrobeModifier } from "./wardrobe";
-
-type modifierSearchCriteria =
-	| {
-			modifier: wardrobeModifier;
-			min?: number;
-			hightier?: boolean;
-			item?: wardrobeItem;
-	  }
-	| undefined;
-
-export function formatModifierSearchCriteria(msc: modifierSearchCriteria): string {
-	return `<tr><td>${msc?.modifier}</td><td>${msc?.min}</td></tr>`;
-}
+import { parse } from "date-fns";
+import { modifierSearchCriteria } from "./search";
+import { genericModifiers, wardrobeHighTierModifiers, wardrobeModifier } from "./wardrobe";
 
 type modifierAliases = {
 	modifier: wardrobeModifier;
@@ -108,15 +97,16 @@ function parseModifierSearchString(
 						.join(", ")}`
 				)
 			);
-			return;
+			return undefined;
 		}
 		if (modMatches.length === 0) {
 			parseErrors.push(new ParseError(`No modifier matched for search: ${modstring}`));
-			return;
+			return undefined;
 		}
 		const matchedModifier = modMatches[0].modifier;
 		return {
 			modifier: matchedModifier,
+			generic: matchedModifier in genericModifiers,
 			min: min,
 			hightier: matchedModifier in wardrobeHighTierModifiers,
 		};
@@ -145,6 +135,13 @@ export const globalOptions = Args.create(
 			default: 365,
 			hidden: true, // not implemented yet
 		}),
+		enddate: Args.custom<Date>(
+			{
+				help: "Date to search until for matching wardrobe items, formatted YYYY-MM-DD",
+			},
+			(datestring) => parse(datestring.replace(/[^0-9]/g, ""), "yyyyMMdd", new Date()),
+			"yyyy-mm-dd"
+		),
 		kolday: Args.number({
 			help: "The KoL day to use to generate a single wardrobe, as would be returned by the ash function daycount() on that day.",
 			hidden: true,
@@ -170,12 +167,10 @@ export const globalOptions = Args.create(
 		}),
 		minmatched: Args.number({
 			help: "Number of modifiers from the search string to require be present before a result is considered a match. Allows searching for more modifiers than can be present on the items. If not specified, all modifiers are required to be present (unless that would be impossible, in which case once every modifier slot that could match does the result is considered a match)",
-			hidden: true, // not implemented yet
 		}),
 		requirefamequip: Args.boolean({
-			help: "Require that any familiar equipment modifier specified be present on all matches.",
+			help: "Require that any familiar equipment modifier specified be present on all matches regardless of minmatched setting.",
 			default: true,
-			hidden: true, // not implemented yet
 		}),
 	}
 );

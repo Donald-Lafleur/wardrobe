@@ -19,20 +19,20 @@ import {
 
 const maxRoll = 2147483648;
 
-type wardrobeItemResults = {
+export type wardrobeItemResults = {
 	day: number;
-	shirt?: wardrobeItemResult;
-	hat?: wardrobeItemResult;
-	collar?: wardrobeItemResult;
+	shirt: wardrobeItemResult;
+	hat: wardrobeItemResult;
+	collar: wardrobeItemResult;
 };
 
-type rolledModifier = {
+export type rolledModifier = {
 	mod: wardrobeFamEquipModifier | wardrobeHatModifier | wardrobeShirtModifier;
 	roll?: number | { min: number; max: number };
 	match?: boolean;
 };
 
-type wardrobeItemResult = {
+export type wardrobeItemResult = {
 	item: wardrobeItem;
 	name?: string;
 	image?: string;

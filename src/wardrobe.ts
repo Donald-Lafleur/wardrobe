@@ -1,36 +1,68 @@
 export type wardrobeItem = "shirt" | "hat" | "collar";
-export const wardrobeHatModifiers = [
-	"Muscle",
-	"Mysticality",
-	"Moxie",
-	"Maximum HP",
-	"Maximum MP",
-	"HP Regen",
-	"MP Regen",
+export const statModifiers = ["Muscle", "Mysticality", "Moxie"] as const;
+export type statModifier = typeof statModifiers[number];
+export const elementalDamageModifiers = [
 	"Hot Damage",
 	"Cold Damage",
 	"Stench Damage",
 	"Sleaze Damage",
 	"Spooky Damage",
+] as const;
+export type elementalDamageModifier = typeof elementalDamageModifiers[number];
+export const elementalSpellDamageModifiers = [
 	"Hot Spell Damage",
 	"Cold Spell Damage",
 	"Stench Spell Damage",
 	"Sleaze Spell Damage",
 	"Spooky Spell Damage",
+] as const;
+export type elementalSpellDamageModifier = typeof elementalSpellDamageModifiers[number];
+export const resistanceModifiers = [
+	"Hot Resistance",
+	"Cold Resistance",
+	"Stench Resistance",
+	"Sleaze Resistance",
+	"Spooky Resistance",
+] as const;
+export type resistanceModifier = typeof resistanceModifiers[number];
+
+export const wardrobeHatModifiers = [
+	// "Muscle",
+	// "Mysticality",
+	// "Moxie",
+	...statModifiers,
+	"Maximum HP",
+	"Maximum MP",
+	"HP Regen",
+	"MP Regen",
+	// "Hot Damage",
+	// "Cold Damage",
+	// "Stench Damage",
+	// "Sleaze Damage",
+	// "Spooky Damage",
+	...elementalDamageModifiers,
+	// "Hot Spell Damage",
+	// "Cold Spell Damage",
+	// "Stench Spell Damage",
+	// "Sleaze Spell Damage",
+	// "Spooky Spell Damage",
+	...elementalSpellDamageModifiers,
 	"Item Drop",
 	"Meat Drop",
 	"Monster Level",
 ] as const;
 export type wardrobeHatModifier = typeof wardrobeHatModifiers[number];
 export const wardrobeShirtModifiers = [
-	"Muscle",
-	"Mysticality",
-	"Moxie",
-	"Hot Resistance",
-	"Cold Resistance",
-	"Stench Resistance",
-	"Sleaze Resistance",
-	"Spooky Resistance",
+	// "Muscle",
+	// "Mysticality",
+	// "Moxie",
+	...statModifiers,
+	// "Hot Resistance",
+	// "Cold Resistance",
+	// "Stench Resistance",
+	// "Sleaze Resistance",
+	// "Spooky Resistance",
+	...resistanceModifiers,
 	"Maximum HP",
 	"Maximum MP",
 	"HP Regen",
@@ -52,11 +84,18 @@ export type wardrobeFamEquipModifier = typeof wardrobeFamEquipModifiers[number];
 
 export const genericModifiers = [
 	"Stat",
-	"Elemental Damage",
 	"Resistance",
+	"Elemental Damage",
 	"Elemental Spell Damage",
 ] as const;
 export type genericModifier = typeof genericModifiers[number];
+
+export const genericModifierToSpecific = {
+	Stat: statModifiers,
+	Resistance: resistanceModifiers,
+	"Elemental Damage": elementalDamageModifiers,
+	"Elemental Spell Damage": elementalSpellDamageModifiers,
+};
 
 export type wardrobeModifier =
 	| wardrobeShirtModifier

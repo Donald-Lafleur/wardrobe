@@ -1773,6 +1773,11 @@ cross-spawn@^7.0.2, cross-spawn@^7.0.3:
     shebang-command "^2.0.0"
     which "^2.0.1"
 
+date-fns@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-4.1.0.tgz#64b3d83fff5aa80438f5b1a633c2e83b8a1c2d14"
+  integrity sha512-Ukq0owbQXxa/U3EGtsdVBkR1w7KOQ5gIBqdH2hkvknzZPYvBxb/aa6E8L7tmjFtkwZBu3UXBbjIgPo/Ez4xaNg==
+
 debug@^2.2.0, debug@^2.3.3:
   version "2.6.9"
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.9.tgz#5d128515df134ff327e90a4c93f4e077a536341f"
@@ -2698,10 +2703,10 @@ levn@^0.4.1:
     prelude-ls "^1.2.1"
     type-check "~0.4.0"
 
-libram@^0.10.10:
-  version "0.10.10"
-  resolved "https://registry.yarnpkg.com/libram/-/libram-0.10.10.tgz#faf6774ea4e2ad06a67df31475246c2851c7bc05"
-  integrity sha512-Qi+BSFOYH0EvQZ9CdIRr1IhraI2dKOx7gKmaDclGXrfkj8sIMckGcKtPQooRAfrzbLN1EYawTwby9Tp0mhboTw==
+libram@^0.10.13:
+  version "0.10.13"
+  resolved "https://registry.yarnpkg.com/libram/-/libram-0.10.13.tgz#9ffd56846a4ccc8f27093e6e3a9051494494ab10"
+  integrity sha512-SUBkpqXP+FYlE9B70Txk5BdAFCZfhAM9nTi+cX/nEn0qaSFmd3uRjHQYWi94B64HfFbOre9W/sGiASApOQr1mg==
   dependencies:
     html-entities "^2.5.2"
 
@@ -3645,10 +3650,10 @@ type-fest@^0.20.2:
   resolved "https://registry.yarnpkg.com/type-fest/-/type-fest-0.20.2.tgz#1bf207f4b28f91583666cb5fbd327887301cd5f4"
   integrity sha512-Ne+eE4r0/iWnpAxD852z3A+N0Bt5RN//NjJwRd2VFHEmrywxf5vsZlh4R6lixl6B+wz/8d+maTSAkN1FIkI3LQ==
 
-typescript@^4.4.2:
-  version "4.4.2"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.4.2.tgz#6d618640d430e3569a1dfb44f7d7e600ced3ee86"
-  integrity sha512-gzP+t5W4hdy4c+68bfcv0t400HVJMMd2+H9B7gae1nQlBzCqvrXX+6GL/b3GAgyTH966pzrZ70/fRjwAtZksSQ==
+typescript@^5.8.2:
+  version "5.8.2"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.8.2.tgz#8170b3702f74b79db2e5a96207c15e65807999e4"
+  integrity sha512-aJn6wq13/afZp/jT9QZmwEjDqqvSGp1VT5GVg+f/t6/oVyrgXM6BY1h9BRh/O5p3PlUPAe+WuiEZOmb/49RqoQ==
 
 unicode-canonical-property-names-ecmascript@^1.0.4:
   version "1.0.4"
