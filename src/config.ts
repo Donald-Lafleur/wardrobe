@@ -151,7 +151,6 @@ export const globalOptions = Args.create(
 		days: Args.number({
 			help: "The maximum number of days into the future to look",
 			default: 365,
-			hidden: true, // not implemented yet
 		}),
 		enddate: Args.custom<Date>(
 			{
