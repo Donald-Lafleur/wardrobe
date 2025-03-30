@@ -1,0 +1,35 @@
+name: Release wardrobe
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: "main"
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Build
+        run: |
+          yarn install
+          yarn run build
+          git fetch --all
+          SHA=$(git rev-parse --short HEAD)
+          git switch release
+          rm -rf scripts/
+          mv KoLmafia/* ./
+          git add scripts/
+          git commit -m "Build script for commit $SHA"
+          git push origin release
