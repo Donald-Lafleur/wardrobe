@@ -144,10 +144,6 @@ export const globalOptions = Args.create(
 	"wardrobe",
 	"Search for days when wardrobe-o-matic's futuristic items will have specific modifiers when opened above a specific level.",
 	{
-		rolls: Args.flag({
-			help: "Print the table of possible rolls for each modifier at each tier organized by item it appears on and stop.",
-			default: false,
-		}),
 		maxresults: Args.number({
 			help: "Maxmimum number of succesful search results to print out",
 			default: 10,
@@ -156,10 +152,12 @@ export const globalOptions = Args.create(
 		days: Args.number({
 			help: "The maximum number of days into the future to look",
 			default: 365,
+			setting: "",
 		}),
 		enddate: Args.custom<Date>(
 			{
 				help: "Date to search until for matching wardrobe items, formatted YYYY-MM-DD",
+				setting: "",
 			},
 			(datestring) => parse(datestring.replace(/[^0-9]/g, ""), "yyyyMMdd", new Date()),
 			"yyyy-mm-dd"
@@ -179,20 +177,19 @@ export const globalOptions = Args.create(
 		mods: Args.custom<modifierSearchCriteria[]>(
 			{
 				help: "Comma separated list of modifiers to search for along with optional colon separated minimum values all wrapped in quotation marks, e.g. \"fam weight:10, sleaze damage:15, moxie:30, hot res\". Use 'stat', 'resistance', 'elemental damage', or 'elemental spell damage' to match any element or stat, e.g., \"familiar weight 10, stat 30, res\". Run 'wardrobe ranges' to see the possible values for each modifier at each tier.",
+				setting: "",
 			},
 			parseModifierSearchString,
 			"string"
 		),
 		minmatched: Args.number({
 			help: "Number of modifiers from the search string to require be present before a result is considered a match. Allows searching for more modifiers than can be present on the items. If not specified, all modifiers are required to be present (unless that would be impossible, in which case once every modifier slot that could match does the result is considered a match)",
-		}),
-		kolday: Args.number({
-			help: "The KoL day to use to generate a single wardrobe, as would be returned by the ash function daycount() on that day.",
-			hidden: true,
+			setting: "",
 		}),
 		requirefamequip: Args.boolean({
 			help: "Require that any familiar equipment modifier specified be present on all matches regardless of minmatched setting.",
 			default: true,
+			setting: "wardrobe_requireFamEquip",
 		}),
 		showrange: Args.flag({
 			help: "Show the range of possible values next to each roll.",
@@ -202,6 +199,16 @@ export const globalOptions = Args.create(
 			help: "Color to print matches in when outputting results (must be one of the 17 CSS basic color keywords or a color hex code or it will be automatically replaced with black).",
 			default: "orange",
 			setting: "wardrobe_matchColor",
+		}),
+		rolls: Args.flag({
+			help: "Print the table of possible rolls for each modifier at each tier organized by item it appears on and stop.",
+			default: false,
+			setting: "",
+		}),
+		kolday: Args.number({
+			help: "The KoL day to use to generate a single wardrobe, as would be returned by the ash function daycount() on that day.",
+			hidden: true,
+			setting: "",
 		}),
 	}
 );
