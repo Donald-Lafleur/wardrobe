@@ -14324,10 +14324,18 @@ var wardrobeHighTierModifiers = ["Familiar Experience", "Item Drop", "Meat Drop"
 var collarBaseNames = ["pet tag", "collar", "pet sweater"];
 var collarAdjectives = ["hyperchromatic", "pearlescent", "bright", "day-glo", "luminescent", "vibrant", "earthy", "oversaturated", "partially transparent", "opaque", "faded", "metallic", "shiny", "glow-in-the-dark", "neon", "prismatic", "incandescent", "polychromatic", "opalescent", "psychedelic", "kaleidoscopic"];
 var shirtAdjectives = ["galvanized", "double-creased", "double-breasted", "foil-clad", "aluminum-threaded", "electroplated", "carbon-coated", "phase-changing", "liquid cooled", "conductive", "radation-shielded", "nanotube-threaded", "moisture-wicking", "shape-memory", "antimicrobial", "liquid-cooled"];
-var shirtMaterials = ["gabardine", "mylar", "polyester", "double-polyester", "triple-polyester", "rayon", "wax paper", "aluminum foil", "synthetic silk", "xylon", "gore-tex", "kapton", "flannel", "silk", "cotton", "wool", "linen"];
-var shirtMaterialQualities = ["super", "ultra", "mega", "hyper"];
-var shirtBaseNames = (/* unused pure expression or super */ null && (["jersey", "Neo-Hawaiian shirt", "t-shirt", "dress shirt", "sweater", "sweatshirt"]));
-var hatAdjectives = ["nanoplated", "self-replicating", "autonomous", "fusion-powered", "fision-powered", "hyperefficient", "quantum", "nuclear", "magnetic", "laser-guided", "solar-powered", "psionic", "gravitronic", "biotronic", "neurolinked", "transforming", "meta-fashionable"];
+var shirtMaterials = ["gabardine", "mylar", "polyester", "double-polyester", "triple-polyester", "rayon", "wax paper", "aluminum foil", "synthetic silk", "xylon", "gore-tex", "kapton", "flannel", "silk", "cotton", "linen", "wool"];
+var shirtMaterialQualities = ["super", "hyper", "ultra", "mega", "reroll"];
+var shirtBaseNames = ["t-shirt", "sweater", "jersey", "polo shirt", "dress shirt", "Neo-Hawaiian shirt", "sweatshirt"];
+var hatAdjectives = ["nanoplated", "self-replicating", "autonomous", "fusion-powered", "fision-powered", "hyperefficient", "quantum", "nuclear", "magnetic", "laser-guided", "solar-powered", "psionic", "gravitronic", "biotronic", "neurolinked", "transforming", "meta-fashionable"]; // rolls 7 and 9, when not identical
+
+var hatMetals = ["tungsten", "carbon", "steel", "aluminum", "titanium", "iron", "hafnium", "nickel", "zinc", "lead", "platinum", "copper", "silver", "tantalum", "niobium", "palladium", "iridium", "bismuth", "cobalt", "indium", "molybdenum", "vanadium", "yttrium", "antimony"]; // 10th hat roll, or later if metals match
+
+var hatBaseModifiers = ["super", "ultra", "mega", "double-", "gamma-", "uber-", "great-", "grand-", "maxi-", "multi-", "tri-", "duo-", "gargantu-", "crypto-", "hyper", "cyber-", "astro-", "grav-"]; // 11th hat roll, or later if metals match
+
+var hatBaseNames = ["beanie", "fedora", "trilby", "beret", "visor", "turban", "fez", "balaclava", "tam", "sombrero", "bowler", "cloche", "tiara", "snood", "diadem", "crown", "bandana", "cowl", "capuchon"]; // Collar	rolls 6 and 8
+
+var collarColors = ["amber", "aquamarine", "auburn", "azure", "beige", "black", "blue", "brown", "burgundy", "cerulean", "chartreuse", "cornflower", "cream", "crimson", "cyan", "ecru", "emerald", "fuchsia", "golden", "gray", "green", "indigo", "lavender", "lilac", "magenta", "maroon", "mauve", "mustard", "navy", "ochre", "olive", "orange", "periwinkle", "pink", "puce", "purple", "red", "rose", "ruby", "salmon", "scarlet", "sepia", "sienna", "silver", "tan", "taupe", "teal", "turquoise", "ultramarine", "vermilion", "violet", "viridian", "white", "yellow"];
 var possibleRollsTable = "<table border=\"1\" style=\"width:60%; align:center; text-align:center\"><tr><th>Item</th><th>Modifier</th><th>T1</th><th>T2</th><th>T3</th><th>T4</th><th>T5</th></tr>\n<tr><td>Shirt</td><td>Hot Resistance</td><td>1-3</td><td>2-4</td><td>3-5</td><td>4-6</td><td>5-7</td></tr>\n<tr><td>Shirt</td><td>Cold Resistance</td><td>1-3</td><td>2-4</td><td>3-5</td><td>4-6</td><td>5-7</td></tr>\n<tr><td>Shirt</td><td>Spooky Resistance</td><td>1-3</td><td>2-4</td><td>3-5</td><td>4-6</td><td>5-7</td></tr>\n<tr><td>Shirt</td><td>Sleaze Resistance</td><td>1-3</td><td>2-4</td><td>3-5</td><td>4-6</td><td>5-7</td></tr>\n<tr><td>Shirt</td><td>Stench Resistance</td><td>1-3</td><td>2-4</td><td>3-5</td><td>4-6</td><td>5-7</td></tr>\n<tr><td>Shirt</td><td>Damage Reduction</td><td>1-5</td><td>4-8</td><td>7-11</td><td>10-14</td><td>13-17</td></tr>\n<tr><td>Shirt</td><td>Damage Absorption</td><td>10-15</td><td>20-30</td><td>30-45</td><td>40-60</td><td>50-75</td></tr>\n<tr><td>Hat</td><td>Hot Damage</td><td>4-6</td><td>8-12</td><td>12-18</td><td>16-24</td><td>20-30</td></tr>\n<tr><td>Hat</td><td>Cold Damage</td><td>4-6</td><td>8-12</td><td>12-18</td><td>16-24</td><td>20-30</td></tr>\n<tr><td>Hat</td><td>Spooky Damage</td><td>4-6</td><td>8-12</td><td>12-18</td><td>16-24</td><td>20-30</td></tr>\n<tr><td>Hat</td><td>Sleaze Damage</td><td>4-6</td><td>8-12</td><td>12-18</td><td>16-24</td><td>20-30</td></tr>\n<tr><td>Hat</td><td>Stench Damage</td><td>4-6</td><td>8-12</td><td>12-18</td><td>16-24</td><td>20-30</td></tr>\n<tr><td>Hat</td><td>Damage to Hot Spells</td><td>4-6</td><td>8-12</td><td>12-18</td><td>16-24</td><td>20-30</td></tr>\n<tr><td>Hat</td><td>Damage to Cold Spells</td><td>4-6</td><td>8-12</td><td>12-18</td><td>16-24</td><td>20-30</td></tr>\n<tr><td>Hat</td><td>Damage to Spooky Spells</td><td>4-6</td><td>8-12</td><td>12-18</td><td>16-24</td><td>20-30</td></tr>\n<tr><td>Hat</td><td>Damage to Sleaze Spells</td><td>4-6</td><td>8-12</td><td>12-18</td><td>16-24</td><td>20-30</td></tr>\n<tr><td>Hat</td><td>Damage to Stench Spells</td><td>4-6</td><td>8-12</td><td>12-18</td><td>16-24</td><td>20-30</td></tr>\n<tr><td>Hat, Shirt</td><td>Muscle</td><td>10-12</td><td>20-24</td><td>30-36</td><td>40-48</td><td>50-60</td></tr>\n<tr><td>Hat, Shirt</td><td>Mysticality</td><td>10-12</td><td>20-24</td><td>30-36</td><td>40-48</td><td>50-60</td></tr>\n<tr><td>Hat, Shirt</td><td>Moxie</td><td>10-12</td><td>20-24</td><td>30-36</td><td>40-48</td><td>50-60</td></tr>\n<tr><td>Hat, Shirt</td><td>Maximum HP</td><td>10-30</td><td>30-50</td><td>50-70</td><td>70-90</td><td>90-110</td></tr>\n<tr><td>Hat, Shirt</td><td>Maximum MP</td><td>10-30</td><td>30-50</td><td>50-70</td><td>70-90</td><td>90-110</td></tr>\n<tr><td>Hat, Shirt</td><td>Item Drop</td><td></td><td></td><td></td><td>18-23</td><td>23-28</td></tr>\n<tr><td>Hat, Shirt</td><td>Meat Drop</td><td></td><td></td><td></td><td>35-45</td><td>45-55</td></tr>\n<tr><td>Hat, Shirt</td><td>Monster Level</td><td></td><td></td><td></td><td>15-25</td><td>20-30</td></tr>\n<tr><td>Hat, Shirt</td><td>HP Regen min</td><td>2-4</td><td>4-6</td><td>6-8</td><td>8-10</td><td>10-12</td></tr>\n<tr><td>Hat, Shirt</td><td>HP Regen max</td><td>5-10</td><td>10-15</td><td>15-20</td><td>20-25</td><td>25-30</td></tr>\n<tr><td>Hat, Shirt</td><td>MP Regen min</td><td>3-5</td><td>6-8</td><td>9-11</td><td>12-14</td><td>15-17</td></tr>\n<tr><td>Hat, Shirt</td><td>MP Regen max</td><td>5-10</td><td>10-15</td><td>15-20</td><td>20-25</td><td>25-30</td></tr>\n<tr><td>Fam Equip</td><td>Familiar Weight</td><td>5-7</td><td>7-9</td><td>9-11</td><td>11-13</td><td>13-15</td></tr>\n<tr><td>Fam Equip</td><td>Familiar Damage</td><td>15-25</td><td>30-50</td><td>45-75</td><td>60-100</td><td>75-125</td></tr>\n<tr><td>Fam Equip</td><td>Familiar Experience</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td></tr></table>";
 ;// ./src/roll.ts
 
@@ -14695,10 +14703,10 @@ var modifiersWithAliases = [{
   aliases: ["dr"]
 }, {
   modifier: "Item Drop",
-  aliases: ["item"]
+  aliases: ["item", "item%", "%item", "item drop from monsters"]
 }, {
   modifier: "Meat Drop",
-  aliases: ["meat"]
+  aliases: ["meat", "meat%", "%meat", "meat drop from monsters"]
 }, {
   modifier: "Monster Level",
   aliases: ["ml"]
@@ -14767,67 +14775,72 @@ var allModifierAliases = config_toConsumableArray(modifiersWithAliases.map(_ref 
   };
 }));
 
+function parseModifierSearchCriteria(modsearch) {
+  var _modifierSearch$min;
+
+  var modRoll = modsearch.trim().match(/\d+$/);
+  var min = modRoll === null ? 0 : parseInt(modRoll[0]);
+  var mod = modsearch.replace(/\d+$/, "").trim().toLowerCase();
+  var modMatches = allModifierAliases.filter(_ref2 => {
+    var modifier = _ref2.modifier,
+        aliases = _ref2.aliases;
+    return modifier.toLowerCase() === mod || aliases.some(alias => alias.toLowerCase() === mod) || // aliases before lowercase-includes to catch "res" as allres option
+    modifier.toLowerCase().includes(mod) || toPrefixes(modifier) === toPrefixes(mod);
+  });
+
+  if (modMatches.length > 1) {
+    var errorMsg = "Multiple different modifiers matched for ".concat(modsearch, ":\n").concat(modMatches.map(m => m.modifier).join(", "), "\n");
+    error(errorMsg);
+    return new ParseError(errorMsg);
+  }
+
+  if (modMatches.length === 0) {
+    var _errorMsg = "No modifier matched for search: ".concat(modsearch, "\n\n");
+
+    error(_errorMsg);
+    return new ParseError(_errorMsg);
+  }
+
+  var matchedModifier = modMatches[0].modifier;
+  var modifierSearch = {
+    modifier: matchedModifier,
+    // includes seems to require the types be exactly the same in order for the match to be
+    // found, since without changing the type to string it won't match.
+    generic: genericModifiers.includes(matchedModifier.toString()),
+    min: min,
+    hightier: wardrobeHighTierModifiers.includes(matchedModifier.toString())
+  };
+
+  if (globalOptions.tier === undefined) {
+    var _errorMsg2 = "Tier is not defined, unable to search for modifiers without a specific tier to look in\n\n";
+    error(_errorMsg2);
+    return new ParseError(_errorMsg2);
+  }
+
+  if (modifierSearch.hightier && globalOptions.tier < 4) {
+    var _errorMsg3 = "Modifier ".concat(modifierSearch.modifier, " matched for search criteria \"").concat(mod, "\" is exclusive to items that are generated at tier 4 and above but tier is ").concat(globalOptions.tier);
+
+    error(_errorMsg3);
+    return new ParseError(_errorMsg3);
+  }
+
+  var range = getModStrengthRange(modifierSearch.modifier, globalOptions.tier);
+
+  if (range.max < ((_modifierSearch$min = modifierSearch.min) !== null && _modifierSearch$min !== void 0 ? _modifierSearch$min : 0)) {
+    var _errorMsg4 = "Required minimum value of ".concat(modifierSearch.min, " for modifier ").concat(modifierSearch.modifier, " is outside the possible range at tier ").concat(globalOptions.tier, " of ").concat(range.min, "-").concat(range.max, "\n\n");
+
+    error(_errorMsg4);
+    return new ParseError(_errorMsg4);
+  }
+
+  return modifierSearch;
+}
+
 function parseModifierSearchString(modSearchString) {
   var mods = modSearchString.split(", ");
-  var parseErrors = [];
-  var searchCriteria = mods.map(modstring => {
-    var _modifierSearch$min;
-
-    var modRoll = modstring.trim().match(/\d+$/);
-    var min = modRoll === null ? 0 : parseInt(modRoll[0]);
-    var mod = modstring.replace(/\d+$/, "").trim().toLowerCase();
-    var modMatches = allModifierAliases.filter(_ref2 => {
-      var modifier = _ref2.modifier,
-          aliases = _ref2.aliases;
-      return modifier.toLowerCase() === mod || aliases.some(alias => alias.toLowerCase() === mod) || // aliases before lowercase-includes to catch "res" as allres option
-      modifier.toLowerCase().includes(mod) || toPrefixes(modifier) === toPrefixes(mod);
-    });
-
-    if (modMatches.length > 1) {
-      var errorMsg = "Multiple different modifiers matched for ".concat(modstring, ":\n").concat(modMatches.map(m => m.modifier).join(", "), "\n");
-      error(errorMsg);
-      parseErrors.push(new ParseError(errorMsg));
-      return undefined;
-    }
-
-    if (modMatches.length === 0) {
-      var _errorMsg = "No modifier matched for search: ".concat(modstring, "\n\n");
-
-      error(_errorMsg);
-      parseErrors.push(new ParseError(_errorMsg));
-      return undefined;
-    }
-
-    var matchedModifier = modMatches[0].modifier;
-    var modifierSearch = {
-      modifier: matchedModifier,
-      // without explicit type to string it won't match, since the union type of matched modifier
-      // is more broad than that of generic modifiers.
-      generic: genericModifiers.includes(matchedModifier.toString()),
-      min: min,
-      hightier: wardrobeHighTierModifiers.includes(matchedModifier.toString())
-    };
-
-    if (globalOptions.tier === undefined) {
-      var _errorMsg2 = "Tier is not defined, unable to search for modifiers without a specific tier to look in\n\n";
-      error(_errorMsg2);
-      parseErrors.push(new ParseError(_errorMsg2));
-      return undefined;
-    }
-
-    var range = getModStrengthRange(modifierSearch.modifier, globalOptions.tier);
-
-    if (range.max < ((_modifierSearch$min = modifierSearch.min) !== null && _modifierSearch$min !== void 0 ? _modifierSearch$min : 0)) {
-      var _errorMsg3 = "Required minimum value of ".concat(modifierSearch.min, " for modifier ").concat(modifierSearch.modifier, " is outside the possible range at tier ").concat(globalOptions.tier, " of ").concat(range.min, "-").concat(range.max, "\n\n");
-
-      error(_errorMsg3);
-      parseErrors.push(new ParseError(_errorMsg3));
-      return undefined;
-    }
-
-    return modifierSearch;
-  });
-  var validSearchCriteria = searchCriteria.filter(p => p !== undefined);
+  var searchCriteria = mods.map(parseModifierSearchCriteria);
+  var validSearchCriteria = searchCriteria.filter(p => "modifier" in p);
+  var parseErrors = searchCriteria.filter(p => "message" in p);
   return parseErrors.length === 0 ? validSearchCriteria : parseErrors[0];
 }
 
@@ -14873,7 +14886,7 @@ var globalOptions = Args.create("wardrobe", "Search for days when wardrobe-o-mat
     setting: "wardrobe_showRange"
   }),
   matchcolor: Args.string({
-    help: "Color to print matches in when outputting results (must be one of the 17 CSS basic color keywords or a color hex codes or it will be replaced with black).",
+    help: "Color to print matches in when outputting results (must be one of the 17 CSS basic color keywords or a color hex code or it will be automatically replaced with black).",
     default: "orange",
     setting: "wardrobe_matchColor"
   })
@@ -14901,14 +14914,20 @@ function getFuturisticCollar(day, tier) {
   // the colors.
 
   unknownRolls.push(rng.roll(maxRoll));
+  var conjunction = rng.mtRand.roll(0, 1) === 0 ? "-" : " and ";
   unknownRolls.push(rng.roll(maxRoll));
+  var firstColor = rng.pickOne(collarColors);
   unknownRolls.push(rng.roll(maxRoll));
-  unknownRolls.push(rng.roll(maxRoll));
-  unknownRolls.push(rng.roll(maxRoll));
+  var secondColor = rng.pickOne(collarColors);
+
+  while (firstColor === secondColor) {
+    secondColor = rng.pickOne(collarColors);
+  }
+
   var strength = rollModStrength(rng, mod, tier);
   return {
     item: "collar",
-    name: "".concat(adjective, " unknown ").concat(collarBaseNames[(image - 2) / 3]),
+    name: "".concat(adjective, " ").concat(firstColor).concat(conjunction).concat(secondColor, " ").concat(collarBaseNames[image / 3]),
     unknownRolls: unknownRolls,
     image: "jw_pet".concat(image + 1),
     modifiers: [{
@@ -14932,9 +14951,13 @@ function getFuturisticShirt(day, tier) {
 
   if (materialRoll > 11) {
     materialQuality = rng.pickOne(shirtMaterialQualities);
+
+    while (materialQuality === "reroll") {
+      materialQuality = rng.pickOne(shirtMaterialQualities);
+    }
   }
 
-  unknownRolls.push(rng.roll(maxRoll));
+  var baseName = rng.pickOne(shirtBaseNames);
   var mods = shirtModifiers.slice(0, tier).map(n => {
     return {
       mod: wardrobeShirtModifiers[n],
@@ -14943,7 +14966,7 @@ function getFuturisticShirt(day, tier) {
   });
   return {
     item: "shirt",
-    name: "".concat(adjective, " ").concat(materialQuality).concat(shirtMaterials[materialRoll], " shirt"),
+    name: "".concat(adjective, " ").concat(materialQuality).concat(shirtMaterials[materialRoll], " ").concat(baseName),
     unknownRolls: unknownRolls,
     image: "jw_shirt".concat(image + 1),
     modifiers: mods,
@@ -14962,11 +14985,16 @@ function getFuturisticHat(day, tier) {
   unknownRolls.push(rng.roll(maxRoll));
   var adjective = rng.pickOne(hatAdjectives);
   unknownRolls.push(rng.roll(maxRoll));
+  var firstMetal = rng.pickOne(hatMetals);
   unknownRolls.push(rng.roll(maxRoll));
-  unknownRolls.push(rng.roll(maxRoll));
-  unknownRolls.push(rng.roll(maxRoll));
-  unknownRolls.push(rng.roll(maxRoll));
-  unknownRolls.push(rng.roll(maxRoll));
+  var secondMetal = rng.pickOne(hatMetals);
+
+  while (firstMetal === secondMetal) {
+    secondMetal = rng.pickOne(hatMetals);
+  }
+
+  var hatBaseModifier = rng.pickOne(hatBaseModifiers);
+  var hatBaseName = rng.pickOne(hatBaseNames);
   var mods = hatModifiers.slice(0, tier).map(n => {
     return {
       mod: wardrobeHatModifiers[n],
@@ -14975,7 +15003,7 @@ function getFuturisticHat(day, tier) {
   });
   return {
     item: "hat",
-    name: "".concat(adjective, " metal-metal hat"),
+    name: "".concat(adjective, " ").concat(firstMetal, "-").concat(secondMetal, " ").concat(hatBaseModifier).concat(hatBaseName),
     unknownRolls: unknownRolls,
     image: "".concat(image > 7 ? "h" : "j", "w_hat").concat(image + 1),
     modifiers: mods,
@@ -16848,7 +16876,7 @@ function formatRoll(roll) {
 }
 
 function formatModifier(modroll) {
-  var matchColor = "orange";
+  var matchColor = globalOptions.matchcolor;
   var roll = typeof modroll.roll === "number" ? "".concat(modroll.roll) : "".concat(modroll.roll.min, "-").concat(modroll.roll.max);
   var range = globalOptions.showrange ? " (".concat(formatRoll(getModStrengthRange(modroll.mod)), ")") : ""; // TODO: option to include range in parens is there's room
 
@@ -17024,7 +17052,6 @@ function wardrobeMatchesSearch(collarCriterion, criteria, wardResult, minneeded)
 function findWardrobeMatches() {
   var totalModifiers = globalOptions.tier * 2 + 1;
   var minneeded = globalOptions.minmatched <= totalModifiers ? Math.min(globalOptions.minmatched, globalOptions.mods.length) : totalModifiers;
-  (0,external_kolmafia_namespaceObject.print)("".concat(minneeded));
   var endkolday = (0,external_kolmafia_namespaceObject.daycount)() + globalOptions.days + 1;
   var matches = []; // sort modifier search criteria so generic searches are later in the search
   // list, allowing each result to match the most specific search criteria possible.
