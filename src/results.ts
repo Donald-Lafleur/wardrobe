@@ -15,7 +15,7 @@ function formatRoll(roll: number | { min: number; max: number } | undefined): st
 }
 
 function formatModifier(modroll: rolledModifier): string {
-	const matchColor = "orange";
+	const matchColor = globalOptions.matchcolor;
 	const roll =
 		typeof modroll.roll === "number"
 			? `${modroll.roll}`

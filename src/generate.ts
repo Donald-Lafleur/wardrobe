@@ -4,8 +4,13 @@ import { rollModStrength } from "./roll";
 import {
 	collarAdjectives,
 	collarBaseNames,
+	collarColors,
 	hatAdjectives,
+	hatBaseModifiers,
+	hatBaseNames,
+	hatMetals,
 	shirtAdjectives,
+	shirtBaseNames,
 	shirtMaterialQualities,
 	shirtMaterials,
 	wardrobeFamEquipModifier,
@@ -13,7 +18,6 @@ import {
 	wardrobeHatModifier,
 	wardrobeHatModifiers,
 	wardrobeItem,
-	// wardrobeModifier,
 	wardrobeShirtModifier,
 	wardrobeShirtModifiers,
 } from "./wardrobe";
@@ -57,15 +61,19 @@ export function getFuturisticCollar(day: number, tier: number): wardrobeItemResu
 	// changes will be clearer. These are probably to choose
 	// the colors.
 	unknownRolls.push(rng.roll(maxRoll));
+	const conjunction = rng.mtRand.roll(0, 1) === 0 ? "-" : " and ";
 	unknownRolls.push(rng.roll(maxRoll));
+	const firstColor = rng.pickOne(collarColors);
 	unknownRolls.push(rng.roll(maxRoll));
-	unknownRolls.push(rng.roll(maxRoll));
-	unknownRolls.push(rng.roll(maxRoll));
+	let secondColor = rng.pickOne(collarColors);
+	while (firstColor === secondColor) {
+		secondColor = rng.pickOne(collarColors);
+	}
 
 	const strength = rollModStrength(rng, mod, tier);
 	return {
 		item: "collar",
-		name: `${adjective} unknown ${collarBaseNames[(image - 2) / 3]}`,
+		name: `${adjective} ${firstColor}${conjunction}${secondColor} ${collarBaseNames[image / 3]}`,
 		unknownRolls: unknownRolls,
 		image: `jw_pet${image + 1}`,
 		modifiers: [
@@ -94,8 +102,11 @@ export function getFuturisticShirt(day: number, tier: number): wardrobeItemResul
 	let materialQuality = "";
 	if (materialRoll > 11) {
 		materialQuality = rng.pickOne(shirtMaterialQualities);
+		while (materialQuality === "reroll") {
+			materialQuality = rng.pickOne(shirtMaterialQualities);
+		}
 	}
-	unknownRolls.push(rng.roll(maxRoll));
+	const baseName = rng.pickOne(shirtBaseNames);
 	const mods: rolledModifier[] = shirtModifiers.slice(0, tier).map((n: number): rolledModifier => {
 		return {
 			mod: wardrobeShirtModifiers[n],
@@ -104,7 +115,7 @@ export function getFuturisticShirt(day: number, tier: number): wardrobeItemResul
 	});
 	return {
 		item: "shirt",
-		name: `${adjective} ${materialQuality}${shirtMaterials[materialRoll]} shirt`,
+		name: `${adjective} ${materialQuality}${shirtMaterials[materialRoll]} ${baseName}`,
 		unknownRolls: unknownRolls,
 		image: `jw_shirt${image + 1}`,
 		modifiers: mods,
@@ -130,11 +141,14 @@ export function getFuturisticHat(day: number, tier: number): wardrobeItemResult 
 	const adjective = rng.pickOne(hatAdjectives);
 
 	unknownRolls.push(rng.roll(maxRoll));
+	const firstMetal = rng.pickOne(hatMetals);
 	unknownRolls.push(rng.roll(maxRoll));
-	unknownRolls.push(rng.roll(maxRoll));
-	unknownRolls.push(rng.roll(maxRoll));
-	unknownRolls.push(rng.roll(maxRoll));
-	unknownRolls.push(rng.roll(maxRoll));
+	let secondMetal = rng.pickOne(hatMetals);
+	while (firstMetal === secondMetal) {
+		secondMetal = rng.pickOne(hatMetals);
+	}
+	const hatBaseModifier = rng.pickOne(hatBaseModifiers);
+	const hatBaseName = rng.pickOne(hatBaseNames);
 
 	const mods: rolledModifier[] = hatModifiers.slice(0, tier).map((n: number): rolledModifier => {
 		return {
@@ -144,7 +158,7 @@ export function getFuturisticHat(day: number, tier: number): wardrobeItemResult 
 	});
 	return {
 		item: "hat",
-		name: `${adjective} metal-metal hat`,
+		name: `${adjective} ${firstMetal}-${secondMetal} ${hatBaseModifier}${hatBaseName}`,
 		unknownRolls: unknownRolls,
 		image: `${image > 7 ? "h" : "j"}w_hat${image + 1}`,
 		modifiers: mods,

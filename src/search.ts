@@ -1,4 +1,4 @@
-import { daycount, print } from "kolmafia";
+import { daycount } from "kolmafia";
 import { globalOptions } from "./config";
 import { getWardrobeForDay, wardrobeItemResults } from "./generate";
 import {
@@ -8,15 +8,13 @@ import {
 	wardrobeModifier,
 } from "./wardrobe";
 
-export type modifierSearchCriteria =
-	| {
-			modifier: wardrobeModifier;
-			generic: boolean;
-			min: number;
-			hightier?: boolean;
-			item?: wardrobeItem;
-	  }
-	| undefined;
+export type modifierSearchCriteria = {
+	modifier: wardrobeModifier;
+	generic: boolean;
+	min: number;
+	hightier: boolean;
+	item?: wardrobeItem;
+};
 
 export function formatModifierSearchCriteria(msc: modifierSearchCriteria): string {
 	return `<tr><td>${msc?.modifier}</td><td>${msc?.min}</td></tr>`;
@@ -109,7 +107,6 @@ export function findWardrobeMatches(): wardrobeItemResults[] {
 		globalOptions.minmatched <= totalModifiers
 			? Math.min(globalOptions.minmatched, globalOptions.mods.length)
 			: totalModifiers;
-	print(`${minneeded}`);
 	const endkolday = daycount() + globalOptions.days + 1;
 	const matches: wardrobeItemResults[] = [];
 	// sort modifier search criteria so generic searches are later in the search

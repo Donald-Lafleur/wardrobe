@@ -29,3 +29,11 @@ You can also specify more search criteria then you want to require be matched, i
 ```text
 wardrobe mods "famwt 10, stat, elem spell dmg, sleaze res, hp regen" minmatched 3
 ```
+
+Fuzzy matching is used to determine which modifiers to look for. At least anything that the maximizer in KoLmafia accepts should work, e.g., damage can be written dmg, Monster Level can be ml, etc., as well as a lot of things that the maximizer would reject such as sle spe dam for Sleaze Spell Damage.
+
+So long as the modifier to search for can be uniquely matched it should work fine, with the exception that first letter abbreviations, e.g., DA, DR, ML, can only be used for modifiers that KoLmafia has abbreviations for, since there are too many duplicates to work around otherwise (three of the elements start with S). HP and MP are accepted for Maximum HP and Maximum MP.
+
+```text
+wardrobe mods "famexp, mox, myst, sle res, ste res, ml, da, dr" minmatched 2 tier 5
+```

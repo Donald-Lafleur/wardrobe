@@ -28,8 +28,8 @@ const modifiersWithAliases: modifierAliases[] = [
 	{ modifier: "MP Regen", aliases: [] },
 	{ modifier: "Damage Absorption", aliases: ["da"] },
 	{ modifier: "Damage Reduction", aliases: ["dr"] },
-	{ modifier: "Item Drop", aliases: ["item"] },
-	{ modifier: "Meat Drop", aliases: ["meat"] },
+	{ modifier: "Item Drop", aliases: ["item", "item%", "%item", "item drop from monsters"] },
+	{ modifier: "Meat Drop", aliases: ["meat", "meat%", "%meat", "meat drop from monsters"] },
 	{ modifier: "Monster Level", aliases: ["ml"] },
 	{ modifier: "Hot Damage", aliases: [] },
 	{ modifier: "Sleaze Damage", aliases: [] },
@@ -75,63 +75,68 @@ const allModifierAliases = [
 	}),
 ];
 
+function parseModifierSearchCriteria(modsearch: string): modifierSearchCriteria | ParseError {
+	const modRoll = modsearch.trim().match(/\d+$/);
+	const min = modRoll === null ? 0 : parseInt(modRoll[0]);
+	const mod = modsearch.replace(/\d+$/, "").trim().toLowerCase();
+	const modMatches = allModifierAliases.filter(
+		({ modifier, aliases }) =>
+			modifier.toLowerCase() === mod ||
+			aliases.some((alias: string) => alias.toLowerCase() === mod) || // aliases before lowercase-includes to catch "res" as allres option
+			modifier.toLowerCase().includes(mod) ||
+			toPrefixes(modifier) === toPrefixes(mod)
+	);
+	if (modMatches.length > 1) {
+		const errorMsg = `Multiple different modifiers matched for ${modsearch}:\n${modMatches
+			.map((m) => m.modifier)
+			.join(", ")}\n`;
+		error(errorMsg);
+		return new ParseError(errorMsg);
+	}
+	if (modMatches.length === 0) {
+		const errorMsg = `No modifier matched for search: ${modsearch}\n\n`;
+		error(errorMsg);
+		return new ParseError(errorMsg);
+	}
+	const matchedModifier = modMatches[0].modifier;
+	const modifierSearch: modifierSearchCriteria = {
+		modifier: matchedModifier,
+		// includes seems to require the types be exactly the same in order for the match to be
+		// found, since without changing the type to string it won't match.
+		generic: genericModifiers.includes(matchedModifier.toString()),
+		min: min,
+		hightier: wardrobeHighTierModifiers.includes(matchedModifier.toString()),
+	};
+	if (globalOptions.tier === undefined) {
+		const errorMsg = `Tier is not defined, unable to search for modifiers without a specific tier to look in\n\n`;
+		error(errorMsg);
+		return new ParseError(errorMsg);
+	}
+	if (modifierSearch.hightier && globalOptions.tier < 4) {
+		const errorMsg = `Modifier ${modifierSearch.modifier} matched for search criteria "${mod}" is exclusive to items that are generated at tier 4 and above but tier is ${globalOptions.tier}`;
+		error(errorMsg);
+		return new ParseError(errorMsg);
+	}
+	const range = getModStrengthRange(modifierSearch.modifier, globalOptions.tier);
+	if (range.max < (modifierSearch.min ?? 0)) {
+		const errorMsg = `Required minimum value of ${modifierSearch.min} for modifier ${modifierSearch.modifier} is outside the possible range at tier ${globalOptions.tier} of ${range.min}-${range.max}\n\n`;
+		error(errorMsg);
+		return new ParseError(errorMsg);
+	}
+	return modifierSearch;
+}
+
 function parseModifierSearchString(
 	modSearchString: string
 ): modifierSearchCriteria[] | ParseError | undefined {
 	const mods = modSearchString.split(", ");
-	const parseErrors: ParseError[] = [];
-	const searchCriteria: (modifierSearchCriteria | undefined)[] = mods.map((modstring: string) => {
-		const modRoll = modstring.trim().match(/\d+$/);
-		const min = modRoll === null ? 0 : parseInt(modRoll[0]);
-		const mod = modstring.replace(/\d+$/, "").trim().toLowerCase();
-		const modMatches = allModifierAliases.filter(
-			({ modifier, aliases }) =>
-				modifier.toLowerCase() === mod ||
-				aliases.some((alias: string) => alias.toLowerCase() === mod) || // aliases before lowercase-includes to catch "res" as allres option
-				modifier.toLowerCase().includes(mod) ||
-				toPrefixes(modifier) === toPrefixes(mod)
-		);
-		if (modMatches.length > 1) {
-			const errorMsg = `Multiple different modifiers matched for ${modstring}:\n${modMatches
-				.map((m) => m.modifier)
-				.join(", ")}\n`;
-			error(errorMsg);
-			parseErrors.push(new ParseError(errorMsg));
-			return undefined;
-		}
-		if (modMatches.length === 0) {
-			const errorMsg = `No modifier matched for search: ${modstring}\n\n`;
-			error(errorMsg);
-			parseErrors.push(new ParseError(errorMsg));
-			return undefined;
-		}
-		const matchedModifier = modMatches[0].modifier;
-		const modifierSearch: modifierSearchCriteria = {
-			modifier: matchedModifier,
-			// without explicit type to string it won't match, since the union type of matched modifier
-			// is more broad than that of generic modifiers.
-			generic: genericModifiers.includes(matchedModifier.toString()),
-			min: min,
-			hightier: wardrobeHighTierModifiers.includes(matchedModifier.toString()),
-		};
-		if (globalOptions.tier === undefined) {
-			const errorMsg = `Tier is not defined, unable to search for modifiers without a specific tier to look in\n\n`;
-			error(errorMsg);
-			parseErrors.push(new ParseError(errorMsg));
-			return undefined;
-		}
-		const range = getModStrengthRange(modifierSearch.modifier, globalOptions.tier);
-		if (range.max < (modifierSearch.min ?? 0)) {
-			const errorMsg = `Required minimum value of ${modifierSearch.min} for modifier ${modifierSearch.modifier} is outside the possible range at tier ${globalOptions.tier} of ${range.min}-${range.max}\n\n`;
-			error(errorMsg);
-			parseErrors.push(new ParseError(errorMsg));
-			return undefined;
-		}
-		return modifierSearch;
-	});
-	const validSearchCriteria: modifierSearchCriteria[] = searchCriteria.filter(
-		(p) => p !== undefined
+	const searchCriteria: (modifierSearchCriteria | ParseError)[] = mods.map(
+		parseModifierSearchCriteria
 	);
+	const validSearchCriteria: modifierSearchCriteria[] = searchCriteria.filter(
+		(p) => "modifier" in p
+	);
+	const parseErrors: ParseError[] = searchCriteria.filter((p) => "message" in p);
 	return parseErrors.length === 0 ? validSearchCriteria : parseErrors[0];
 }
 
@@ -194,7 +199,7 @@ export const globalOptions = Args.create(
 			setting: "wardrobe_showRange",
 		}),
 		matchcolor: Args.string({
-			help: "Color to print matches in when outputting results (must be one of the 17 CSS basic color keywords or a color hex codes or it will be replaced with black).",
+			help: "Color to print matches in when outputting results (must be one of the 17 CSS basic color keywords or a color hex code or it will be automatically replaced with black).",
 			default: "orange",
 			setting: "wardrobe_matchColor",
 		}),
