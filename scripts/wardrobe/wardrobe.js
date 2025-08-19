@@ -16901,7 +16901,7 @@ function formatMatchesTableHtml(matches) {
     htmlTableRows.push(formatHtmlTableRow(matches[i]));
   }
 
-  return "".concat(htmlTableRows.join(""), "</table>").replace(/Damage Absorption/g, "DA").replace(/Damage Reduction/g, "DR").replace(/Monster Level/g, "ML").replace(/Maximum/g, "Max").replace(/Damage/g, "Dmg").replace(/Resistance/g, "Res").replace(/Familiar/, "Fam").replace(/Experience/, "Exp");
+  return "".concat(htmlTableRows.join(""), "</table>").replace(/Damage Absorption/g, "DA").replace(/Damage Reduction/g, "DR").replace(/Monster Level/g, "ML").replace(/Maximum/g, "Max").replace(/Damage/g, "Dmg").replace(/Spell/g, "Sp").replace(/Resistance/g, "Res").replace(/Familiar/g, "Fam").replace(/Experience/g, "Exp").replace(/Muscle/g, "Mus").replace(/Mysticality/g, "Myst").replace(/Mox/g, "Mox");
 }
 var hatMods = wardrobeHatModifiers.map(m => m.toString());
 var shirtMods = wardrobeShirtModifiers.map(m => m.toString());
