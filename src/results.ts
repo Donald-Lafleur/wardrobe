@@ -42,9 +42,13 @@ export function formatMatchesTableHtml(matches: wardrobeItemResults[]): string {
 		.replace(/Monster Level/g, "ML")
 		.replace(/Maximum/g, "Max")
 		.replace(/Damage/g, "Dmg")
+		.replace(/Spell/g, "Sp")
 		.replace(/Resistance/g, "Res")
-		.replace(/Familiar/, "Fam")
-		.replace(/Experience/, "Exp");
+		.replace(/Familiar/g, "Fam")
+		.replace(/Experience/g, "Exp")
+		.replace(/Muscle/g, "Mus")
+		.replace(/Mysticality/g, "Myst")
+		.replace(/Mox/g, "Mox");
 }
 
 const hatMods = wardrobeHatModifiers.map((m) => m.toString());
